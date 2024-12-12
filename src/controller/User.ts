@@ -1,64 +1,40 @@
-import express, { Request, Response } from 'express';
-import UserModel from '../models/User';
-import { findAllUsers, saveUser, updateUser } from '../services/User';
-const UserController = express();
+import { Request, Response } from "express";
+import { handleHttp } from "../utils/error.handle";
 
-UserController.get('/list', async(req: Request, res: Response) => {
+const getUser = (req: Request, res: Response) => {
   try {
-    const users = await findAllUsers();
-    res.send(users);
-  } catch (error) {
-    res.status(400)
+  } catch (e) {
+    handleHttp(res, "ERROR_GET_USER");
   }
-});
-UserController.post('/', async(req: Request, res: Response) => {
-  try {
-    const user = req.body;
-    await saveUser(user);
-    res.send('User saved');
-  } catch (error) {
-    res.status(400)
-  }
-});
-UserController.put('/user/:id', async(req: Request, res: Response) => {
-  try {
-    const user = req.body;
-    const { id = '' } = req.params;
-    await updateUser(user, id);
-    res.send('User updated');
-  } catch (error) {
-    res.status(400)
-  }
-});
-UserController.delete('/user/:id', async(req: Request, res: Response) => {
-  try {
-    const { id = '' } = req.params;
-    await UserModel.destroy({
-      where: {
-        id
-      }
-    });
-    res.send('User deleted');
-  } catch (error) {
-    res.status(400)
-  }
-});
-UserController.patch('/user/:id', async(req: Request, res: Response) => {    
-  try {
-    const user = req.body;
-    const { id = '' } = req.params;
-    await UserModel.update(user, {
-      where: {
-        id
-      }
-    });
-    res.send('User updated');
-  } catch (error) {
-    res.status(400)
-  }
-});
-export default UserController;
-//https://medium.com/@fawazudeenogunleye/node-setting-up-external-routes-with-express-1228c27640a4
-//https://sequelize.org/api/v6/class/src/sequelize.js~sequelize#instance-method-define
+};
 
-//https://dev.to/wizdomtek/typescript-express-building-robust-apis-with-nodejs-1fln ********
+const getUsers = (req: Request, res: Response) => {
+  try {
+  } catch (e) {
+    handleHttp(res, "ERROR_GET_USERS");
+  }
+};
+
+const updateUser = (req: Request, res: Response) => {
+  try {
+  } catch (e) {
+    handleHttp(res, "ERROR_UPDATE_USER");
+  }
+};
+
+const postUser = ({ body }: Request, res: Response) => {
+  try {
+    res.send(body);
+  } catch (e) {
+    handleHttp(res, "ERROR_POST_USER");
+  }
+};
+
+const deleteUser = (req: Request, res: Response) => {
+  try {
+  } catch (e) {
+    handleHttp(res, "ERROR_DELETE_USER");
+  }
+};
+
+export { getUser, getUsers, updateUser, postUser, deleteUser };
