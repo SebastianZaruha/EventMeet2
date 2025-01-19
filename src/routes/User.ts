@@ -5,6 +5,7 @@ import {
   updateUser,
   postUser,
   deleteUser,
+  loginUser,
 } from "../controller/User";
 
 const router = Router();
@@ -14,5 +15,6 @@ router.get("/", getUsers);
 router.put("/:id", updateUser);
 router.post("/", postUser);
 router.delete("/:id", deleteUser);
+router.post("/login", loginUser);
 
 export { router };
