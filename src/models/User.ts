@@ -10,7 +10,7 @@ const UserModel = conectDB.define(
       primaryKey: true,
     },
 
-    Name: {
+    nick: {
       type: DataTypes.STRING,
       allowNull: false,
     },
