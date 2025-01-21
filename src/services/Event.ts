@@ -1,9 +1,9 @@
 import EventModel from "../models/Event";
 //He añadido el service de los eventos como propuesta de las posibilidades que deberían tener nuestros usuarios para buscar eventos
-export const findEventsByCompanyId = async (companyId: string) => {
+export const findEventsByCompanyId = async (companyid: string) => {
   const events = await EventModel.findAll({
     where: {
-      companyId,
+      companyid,
     },
   });
   return events;

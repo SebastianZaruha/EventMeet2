@@ -9,6 +9,7 @@ const getEvent = (req: Request, res: Response) => {
     const event = findEventById(id);
 
     if (event){
+      console.log("Waiting for", event);
       res.status(200).send(event);
     } else{
       res.status(404).send("ERROR_GET_EVENT");

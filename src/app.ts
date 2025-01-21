@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import { router } from "./routes/Event";
+import { router } from "./routes/User";
 import conectDB from "./config/db-connector";
 dotenv.config();
 

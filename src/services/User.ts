@@ -44,4 +44,13 @@ export const passwordMatch = async (email: string, password: string) => {
   return user;
 }
 
+export default {
+  findAllUsers,
+  saveUser,
+  findById,
+  findByIdAndUpdate,
+  findByEmail,
+  passwordMatch,
+};
+
 
