@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
+import { router } from "./routes/Event";
 import conectDB from "./config/db-connector";
 dotenv.config();
 
@@ -15,6 +16,7 @@ conectDB
   .catch((error) => {
     console.error("Unable to connect to the database:", error);
   });
+app.use("/", router);
 
 app
   .listen(PORT, () => {

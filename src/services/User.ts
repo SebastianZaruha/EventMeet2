@@ -9,7 +9,7 @@ export const saveUser = async (user: any) => {
   await newUser.save();
   return newUser;
 };
-export const findById = async (id: string) => {//NOTA: DEBERÍAMOS DE USAR NUMBER PARA ID, PUES LOS USUARIOS NO ESTÁN IDENTIFICADOS POR UN STRING, AUNQUE LA CONVERSIÓN ES POSIBLE
+export const findById = async (id: string) => {//los id son strings porque las http request son en string
   const user = await UserModel.findOne({
     where: {
       id
@@ -17,7 +17,7 @@ export const findById = async (id: string) => {//NOTA: DEBERÍAMOS DE USAR NUMBE
   });
   return user;
 }
-export const findByIdAndUpdate = async (id: string, body: any) => {//NOTA: LO MISMO AQUÍ, SI HAY ALGÚN MOTIVO, SIMPLEMENTE DECÍDMELO
+export const findByIdAndUpdate = async (id: string, body: any) => {
   const user = await UserModel.update(body, {
     where: {
       id

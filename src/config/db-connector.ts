@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const conectDB = new Sequelize(
+const connectDB = new Sequelize(
   process.env.DB_NAME || "dbEventMeet",
   process.env.DB_USER || "postgres",
   process.env.DB_PASSWORD || "postgres",
@@ -15,9 +15,9 @@ const conectDB = new Sequelize(
   }
 );
 
-export default conectDB;
+export default connectDB;
 
-conectDB
+connectDB
   .authenticate()
   .then(() => {
     console.log("Connection has been established successfully.");

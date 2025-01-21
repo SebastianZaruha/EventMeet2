@@ -9,10 +9,10 @@ import {
 
 const router = Router();
 
-router.get("/event", getEvent);
+router.get("/event/:id", getEvent);
 router.get("/events", getEvents);
 router.post("/event", postEvent);
-router.put("/event", updateEvent);
-router.delete("/event", deleteEvent);
+router.put("/event/:id", updateEvent);
+router.delete("/event/:id", deleteEvent);
 
 export { router };
