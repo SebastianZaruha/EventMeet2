@@ -9,8 +9,11 @@ import {
 
 const router = Router();
 
-router.get("/eventsInterest", getEventsInterest);
+router.get("/eventsInterest/", getEventsInterest);
 router.get("/eventsInterest/:id", getEventsInterests);
+//los intereses por id necesitan ambos un parámetro de búsqueda
+//entiendo que el primer busca los eventos por un interés y el segundo busca
+//todos los intereses de un evento
 router.post("/eventsInterest", postEventsInterest);
 router.put("/eventsInterest/:id", updateEventsInterest);
 router.delete("/eventsInterest/:id", deleteEventsInterest);

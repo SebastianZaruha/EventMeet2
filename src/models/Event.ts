@@ -12,7 +12,7 @@ const EventModel = conectDB.define(
       primaryKey: true,
     },
 
-    companyId: {
+    companyid: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {

@@ -9,7 +9,7 @@ export const saveUser = async (user: any) => {
   await newUser.save();
   return newUser;
 };
-export const findById = async (id: string) => {
+export const findById = async (id: string) => {//los id son strings porque las http request son en string
   const user = await UserModel.findOne({
     where: {
       id
@@ -43,5 +43,14 @@ export const passwordMatch = async (email: string, password: string) => {
   }); 
   return user;
 }
+
+export default {
+  findAllUsers,
+  saveUser,
+  findById,
+  findByIdAndUpdate,
+  findByEmail,
+  passwordMatch,
+};
 
 
