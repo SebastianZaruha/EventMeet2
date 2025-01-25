@@ -1,15 +1,13 @@
 import { Request, Response } from "express";
 import { handleHttp } from "../utils/error.handle";
 
-import  { findEventById, findAllEvents, findEventsByCompanyId, findEventsByDate, findEventsByLocation, findEventsByName} from "../services/Event"; 
+import  { findEventById, findAllEvents, findEventsByCompanyId, findEventsByDate, findEventsByLocation, findEventsByTitle} from "../services/Event"; 
 
-const getEvent = (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const event = findEventById(id);
+const getEvent = async(req: Request, res: Response) => {
+  try {    
+    const event = await findEventById(req.params.id);
 
-    if (event){
-      console.log("Waiting for", event);
+    if (event){      
       res.status(200).send(event);
     } else{
       res.status(404).send("ERROR_GET_EVENT");
@@ -19,9 +17,9 @@ const getEvent = (req: Request, res: Response) => {
   }
 };
 
-const getEvents = (req: Request, res: Response) => {
+const getEvents = async (req: Request, res: Response) => {
   try {
-    const events = findAllEvents(); 
+    const events = await findAllEvents(); 
     res.status(200).send(events);
   } catch (e) {
     handleHttp(res, "ERROR_GET_EVENTS");

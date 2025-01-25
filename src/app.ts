@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import { router } from "./routes/User";
+import { userRouter } from "./routes/User";
+import { companyRouter } from "./routes/Company";
+import { eventRouter } from "./routes/Event";
 import conectDB from "./config/db-connector";
 import "./models/Company";
 import "./models/Event";
@@ -36,7 +38,9 @@ const PORT = process.env.PORT || 3000;
 //   .catch((error) => {
 //     console.error("Unable to connect to the database:", error);
 //   });
-app.use("/v1", router);
+app.use("/v1/users", userRouter);
+app.use("/v1/companies", companyRouter);
+app.use("/v1/events", eventRouter);
 // Si necesitas sincronizar todos los modelos
 (async () => {
   try {

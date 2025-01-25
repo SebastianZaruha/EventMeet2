@@ -9,10 +9,10 @@ export const findEventsByCompanyId = async (companyid: string) => {
   return events;
 };
 
-export const findEventsByName = async (name: string) => {
+export const findEventsByTitle = async (title: string) => {
   const events = await EventModel.findAll({
     where: {
-      name,
+      title,
     },
   });
   return events;
@@ -45,15 +45,15 @@ export const findEventById = async (id: string) => {
   //colocar en la web o en el landing page
   const event = await EventModel.findOne({
     where: {
-      id,
-    },
+      id
+    }
   });
   return event;
 };
 
 export default {
   findEventsByCompanyId,
-  findEventsByName,
+  findEventsByTitle,
   findEventsByDate,
   findEventsByLocation,
   findAllEvents,

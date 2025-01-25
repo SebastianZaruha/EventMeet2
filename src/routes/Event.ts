@@ -15,4 +15,4 @@ router.post("/event", postEvent);
 router.put("/event/:id", updateEvent);
 router.delete("/event/:id", deleteEvent);
 
-export { router };
+export { router as eventRouter};

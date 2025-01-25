@@ -7,7 +7,7 @@ const CompanyModel = conectDB.define("companies", {
     autoIncrement: true,
     primaryKey: true,
   },
-  name: {
+  name_company: {
     type: DataTypes.STRING,
     allowNull: false,
   },

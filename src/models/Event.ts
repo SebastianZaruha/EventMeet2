@@ -2,6 +2,7 @@ import { DataTypes } from "sequelize";
 import conectDB from "../config/db-connector";
 import { StatusEvent } from "../models/enums/StatusEvent";
 import CompanyModel from "./Company";
+import { title } from "process";
 
 const EventModel = conectDB.define(
   "events",
@@ -21,7 +22,7 @@ const EventModel = conectDB.define(
       },
       onDelete: "CASCADE",
     },
-    name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
