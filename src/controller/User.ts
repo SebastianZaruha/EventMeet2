@@ -43,17 +43,15 @@ const updateUser = (req: Request, res: Response) => {
 
 };
 
-const postUser = ({ body }: Request, res: Response) => {
+const postUser = (req: Request, res: Response) => {
   try {
-    const user = body;
-    if (!user) {
-      return handleHttp(res, "ERROR_POST_USER");
-    }
+    const user = req.body;
+    console.log(user);
     saveUser(user).then((user) => {
       res.status(201).json(user);
     });
   } catch (e) {
-    handleHttp(res, "ERROR_POST_USER");
+    handleHttp(res, "ERROR_ON_SAVE_USER");
   }
 };
 
