@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { handleHttp } from "../utils/error.handle";
 
-import  { findEventById, findAllEvents, findEventsByCompanyId, findEventsByDate, findEventsByLocation, findEventsByTitle} from "../services/Event"; 
+import  { findEventById, findAllEvents, findEventsByCompanyId, findEventsByDate, findEventsByLocation, findEventsByTitle, findEventsByInterest} from "../services/Event"; 
 
 const getEvent = async(req: Request, res: Response) => {
   try {    
@@ -50,4 +50,13 @@ const deleteEvent = (req: Request, res: Response) => {
   }
 };
 
-export { getEvent, getEvents, updateEvent, postEvent, deleteEvent };
+const getEventsByInterest = async (req: Request, res: Response) => {
+  try {
+    const events = await findEventsByInterest(req.params.interestTag);
+    res.status(200).send(events);
+  } catch (e) {
+    handleHttp(res, "ERROR_GET_EVENTS_BY_INTEREST");
+  }
+}
+
+export { getEvent, getEvents, updateEvent, postEvent, deleteEvent, getEventsByInterest };

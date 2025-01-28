@@ -1,4 +1,6 @@
 import EventModel from "../models/Event";
+import InterestModel from "../models/Interest";
+import EventInterestModel from "../models/EventsInterest";
 //He añadido el service de los eventos como propuesta de las posibilidades que deberían tener nuestros usuarios para buscar eventos
 export const findEventsByCompanyId = async (companyid: string) => {
   const events = await EventModel.findAll({
@@ -51,6 +53,25 @@ export const findEventById = async (id: string) => {
   return event;
 };
 
+export const findEventsByInterest = async (interestTag: string) => {
+  const events = await EventModel.findAll({
+    include: [
+      {
+        model: EventInterestModel,
+        include: [
+          {
+            model: InterestModel,
+            where: {
+              tag: interestTag
+            }
+          }
+        ]
+      }
+    ]
+  });
+  return events;
+};
+
 export default {
   findEventsByCompanyId,
   findEventsByTitle,
@@ -58,4 +79,5 @@ export default {
   findEventsByLocation,
   findAllEvents,
   findEventById,
+  findEventsByInterest
 };

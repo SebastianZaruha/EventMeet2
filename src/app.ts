@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { userRouter } from "./routes/User";
 import { companyRouter } from "./routes/Company";
 import { eventRouter } from "./routes/Event";
+import { interestRouter } from "./routes/Interest";
 import conectDB from "./config/db-connector";
 import "./models/Company";
 import "./models/Event";
@@ -42,6 +43,7 @@ app.use(express.json());
 app.use("/v1/users", userRouter);
 app.use("/v1/companies", companyRouter);
 app.use("/v1/events", eventRouter);
+app.use("/v1/interests", interestRouter);
 // Si necesitas sincronizar todos los modelos
 (async () => {
   try {

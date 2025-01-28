@@ -5,12 +5,14 @@ import {
   postEvent,
   updateEvent,
   deleteEvent,
+  getEventsByInterest,
 } from "../controller/Event";
 
 const router = Router();
 
 router.get("/event/:id", getEvent);
 router.get("/events", getEvents);
+router.get("/events/:interestTag", getEventsByInterest);
 router.post("/event", postEvent);
 router.put("/event/:id", updateEvent);
 router.delete("/event/:id", deleteEvent);
