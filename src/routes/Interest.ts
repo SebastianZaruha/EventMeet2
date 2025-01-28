@@ -4,7 +4,6 @@ import {
   getInterests,
   updateInterest,
   postCreateInterest,
-  postRelateInterestToEvent,
   deleteInterest,
 } from "../controller/Interest";
 

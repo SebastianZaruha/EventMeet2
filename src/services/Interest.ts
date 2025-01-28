@@ -42,13 +42,7 @@ export const createInterest = async (interest:any) => {
     return newInterest;
 };
 
-export const relateInterestToEvent = async (eventId: string, interestId: string) => {
-    const eventInterest = await EventInterestModel.create({
-        eventId,
-        interestId
-    });
-    return eventInterest;
-};
+
 
 export const removeInterestFromEvent = async (eventId: string, interestId: string) => {
     const result = await EventInterestModel.destroy({
@@ -70,7 +64,6 @@ export default {
     findInterestByTag,
     findInterestsByEventId,
     createInterest,
-    relateInterestToEvent,
     removeInterestFromEvent
 };
 

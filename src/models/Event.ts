@@ -3,6 +3,8 @@ import conectDB from "../config/db-connector";
 import { StatusEvent } from "../models/enums/StatusEvent";
 import CompanyModel from "./Company";
 import { title } from "process";
+import InterestModel from "./Interest";
+import EventsInterestModel from "./EventsInterest";
 
 const EventModel = conectDB.define(
   "events",
@@ -62,5 +64,10 @@ const EventModel = conectDB.define(
     // Other model options go here
   }
 );
+
+EventModel.belongsToMany(InterestModel, {
+  through: EventsInterestModel,
+  foreignKey: "eventId",
+});
 
 export default EventModel;

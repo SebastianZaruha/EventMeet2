@@ -4,6 +4,7 @@ import { userRouter } from "./routes/User";
 import { companyRouter } from "./routes/Company";
 import { eventRouter } from "./routes/Event";
 import { interestRouter } from "./routes/Interest";
+import { eventsInterestRouter } from "./routes/EventsInterest";
 import conectDB from "./config/db-connector";
 import "./models/Company";
 import "./models/Event";
@@ -44,6 +45,7 @@ app.use("/v1/users", userRouter);
 app.use("/v1/companies", companyRouter);
 app.use("/v1/events", eventRouter);
 app.use("/v1/interests", interestRouter);
+app.use("/v1/events-interests", eventsInterestRouter);
 // Si necesitas sincronizar todos los modelos
 (async () => {
   try {

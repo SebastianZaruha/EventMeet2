@@ -1,9 +1,9 @@
 import { DataTypes } from "sequelize";
-import conectDB from "../config/db-connector";
+import connectDB from "../config/db-connector";
 import EventModel from "./Event";
 import InterestModel from "./Interest";
 
-const EventsInterestModel = conectDB.define("eventsInterest", {
+const EventsInterestModel = connectDB.define("eventsInterests", {
   eventId: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -13,7 +13,7 @@ const EventsInterestModel = conectDB.define("eventsInterest", {
     },
     onDelete: "CASCADE",
   },
-  interestId: {
+  interestsId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -23,5 +23,8 @@ const EventsInterestModel = conectDB.define("eventsInterest", {
     onDelete: "CASCADE",
   },
 });
+
+EventModel.belongsToMany(InterestModel, { through: EventsInterestModel, foreignKey: "eventId" });
+InterestModel.belongsToMany(EventModel, { through: EventsInterestModel, foreignKey: "interestsId" });
 
 export default EventsInterestModel;

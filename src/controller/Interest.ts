@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { handleHttp } from "../utils/error.handle";
-import { createInterest, findAllInterests, findInterestByTag, relateInterestToEvent } from "../services/Interest";
+import {
+  createInterest,
+  findAllInterests,
+  findInterestByTag,
+} from "../services/Interest";
 
 const getInterestByTag = (req: Request, res: Response) => {
   try {
@@ -31,33 +35,21 @@ const updateInterest = (req: Request, res: Response) => {
   }
 };
 
-const postCreateInterest =  (req: Request, res: Response) => {
-  const interest = req.body;
-  findInterestByTag(interest).then((interest) => {
-    if (interest) {
-      return res.status(400).json({ message: "Interest already exists" });
-    }
-    createInterest(interest).then((interest) => {
-      return res.status(201).json(interest);
-    });
-  });
-};
-
-const postRelateInterestToEvent = async (req: Request, res: Response) => {
+const postCreateInterest = (req: Request, res: Response) => {
   try {
-    const { eventId, interestId } = req.body;
+    const interest = req.body;
+    const { tag: iTag = '' } = interest;
 
-    // Verificar que los campos requeridos estén presentes
-    if (!eventId || !interestId) {
-      return res.status(400).json({ message: "Event ID and Interest ID are required" });
-    }
-
-    const eventInterest = await relateInterestToEvent(eventId, interestId);
-    return res.status(201).json(eventInterest);
+      createInterest(interest).then((cInterest) => {
+        return res.status(201).json(cInterest);
+      });
+    
   } catch (e) {
-    handleHttp(res, "ERROR_RELATE_INTEREST_TO_EVENT");
+    handleHttp(res, "ERROR_CREATE_INTEREST");
   }
 };
+
+
 
 const deleteInterest = (req: Request, res: Response) => {
   try {
@@ -71,6 +63,5 @@ export {
   getInterests,
   updateInterest,
   postCreateInterest,
-  postRelateInterestToEvent,
   deleteInterest,
 };
