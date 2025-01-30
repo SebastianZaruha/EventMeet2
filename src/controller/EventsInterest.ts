@@ -28,17 +28,14 @@ const updateEventsInterest = ( {params, body} : Request, res: Response) => {
   }
 };
 
-const postRelateInterestToEvent = async (req: Request, res: Response) => {
+const postRelateInterestToEvent = (req: Request, res: Response) => {
   try {
-    const { eventId, interestId } = req.body;
-
-    // Verificar que los campos requeridos estén presentes
-    if (!eventId || !interestId) {
-      res.status(400).json({ message: "Event ID and Interest ID are required" });
-    }
-
-    const eventInterest = await relateInterestToEvent(eventId, interestId);
-    res.status(201).json(eventInterest);
+    const { eventId: event} = req.body;
+    const { interestId: interest} = req.body;
+    relateInterestToEvent(event, interest).then((eventInterest) => {
+      res.status(201).send(eventInterest);
+    });
+       
   } catch (e) {
     handleHttp(res, "ERROR_RELATE_INTEREST_TO_EVENT");
   }

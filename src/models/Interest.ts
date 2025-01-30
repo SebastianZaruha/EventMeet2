@@ -15,9 +15,5 @@ const InterestModel = connectDB.define("interests", {
   },
 });
 
-InterestModel.belongsToMany(EventModel, {
-  through: EventsInterestModel,
-  foreignKey: "interestsId",
-});
 
 export default InterestModel;

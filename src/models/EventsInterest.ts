@@ -13,7 +13,7 @@ const EventsInterestModel = connectDB.define("eventsInterests", {
     },
     onDelete: "CASCADE",
   },
-  interestsId: {
+  interestId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -24,7 +24,5 @@ const EventsInterestModel = connectDB.define("eventsInterests", {
   },
 });
 
-EventModel.belongsToMany(InterestModel, { through: EventsInterestModel, foreignKey: "eventId" });
-InterestModel.belongsToMany(EventModel, { through: EventsInterestModel, foreignKey: "interestsId" });
 
 export default EventsInterestModel;

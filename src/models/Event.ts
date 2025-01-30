@@ -65,9 +65,4 @@ const EventModel = conectDB.define(
   }
 );
 
-EventModel.belongsToMany(InterestModel, {
-  through: EventsInterestModel,
-  foreignKey: "eventId",
-});
-
 export default EventModel;

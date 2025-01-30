@@ -72,6 +72,12 @@ export const findEventsByInterest = async (interestTag: string) => {
   return events;
 };
 
+export const createEvent = async (event: any) => {
+  const newEvent = EventModel.build(event);
+  await newEvent.save();
+  return newEvent;
+};
+
 export default {
   findEventsByCompanyId,
   findEventsByTitle,
@@ -79,5 +85,6 @@ export default {
   findEventsByLocation,
   findAllEvents,
   findEventById,
-  findEventsByInterest
+  findEventsByInterest,
+  createEvent
 };

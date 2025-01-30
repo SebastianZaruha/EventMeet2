@@ -49,7 +49,7 @@ app.use("/v1/events-interests", eventsInterestRouter);
 // Si necesitas sincronizar todos los modelos
 (async () => {
   try {
-    await conectDB.sync({ alter: true }).then(() => {
+    await conectDB.sync({ alter : true }).then(() => {
       app
         .listen(PORT, () => {
           console.log("Server running at PORT: ", PORT);

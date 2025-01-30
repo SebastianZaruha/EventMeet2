@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { handleHttp } from "../utils/error.handle";
 
-import  { findEventById, findAllEvents, findEventsByCompanyId, findEventsByDate, findEventsByLocation, findEventsByTitle, findEventsByInterest} from "../services/Event"; 
+import  { findEventById, findAllEvents, findEventsByCompanyId, findEventsByDate, findEventsByLocation, findEventsByTitle, findEventsByInterest, createEvent} from "../services/Event"; 
+import { create } from "domain";
 
 const getEvent = async(req: Request, res: Response) => {
   try {    
@@ -34,9 +35,13 @@ const updateEvent = ( {params, body} : Request, res: Response) => {
   }
 };
 
-const postEvent = ({ body }: Request, res: Response) => {
+const postEvent = (req: Request, res: Response) => {
   try {
-    res.status(201).send(body);
+    const event = req.body;
+    console.log(event);
+    createEvent(event).then((event) => {
+      res.status(201).send(event);
+    }); 
   } catch (e) {
     handleHttp(res, "ERROR_POST_EVENT");
   }
