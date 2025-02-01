@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { handleHttp } from "../utils/error.handle";
 
-import  { findEventById, findAllEvents, findEventsByCompanyId, findEventsByDate, findEventsByLocation, findEventsByTitle, findEventsByInterest, createEvent} from "../services/Event"; 
+import  { findEventById, findAllEvents, findEventsByCompanyId, findEventsByDate, findEventsByLocation, findEventsByTitle, createEvent, findEventsByInterestTag} from "../services/Event"; 
 import { create } from "domain";
 
 const getEvent = async(req: Request, res: Response) => {
@@ -12,6 +12,7 @@ const getEvent = async(req: Request, res: Response) => {
       res.status(200).send(event);
     } else{
       res.status(404).send("ERROR_GET_EVENT");
+      return;
     }
   } catch (e) {
     handleHttp(res, "ERROR_GET_EVENT");
@@ -55,13 +56,13 @@ const deleteEvent = (req: Request, res: Response) => {
   }
 };
 
-const getEventsByInterest = async (req: Request, res: Response) => {
+const getEventsByInterestTag = async (req: Request, res: Response): Promise<void> => {
   try {
-    const events = await findEventsByInterest(req.params.interestTag);
-    res.status(200).send(events);
-  } catch (e) {
-    handleHttp(res, "ERROR_GET_EVENTS_BY_INTEREST");
+    const events = await findEventsByInterestTag(req.params.tag);
+    res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
   }
 }
 
-export { getEvent, getEvents, updateEvent, postEvent, deleteEvent, getEventsByInterest };
+export { getEvent, getEvents, updateEvent, postEvent, deleteEvent, getEventsByInterestTag };

@@ -65,4 +65,5 @@ const EventModel = conectDB.define(
   }
 );
 
+
 export default EventModel;

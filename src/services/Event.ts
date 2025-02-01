@@ -1,6 +1,8 @@
 import EventModel from "../models/Event";
 import InterestModel from "../models/Interest";
 import EventInterestModel from "../models/EventsInterest";
+import connectDB from "../config/db-connector";
+import { QueryTypes } from "sequelize";
 //He añadido el service de los eventos como propuesta de las posibilidades que deberían tener nuestros usuarios para buscar eventos
 export const findEventsByCompanyId = async (companyid: string) => {
   const events = await EventModel.findAll({
@@ -53,23 +55,22 @@ export const findEventById = async (id: string) => {
   return event;
 };
 
-export const findEventsByInterest = async (interestTag: string) => {
-  const events = await EventModel.findAll({
-    include: [
-      {
-        model: EventInterestModel,
-        include: [
-          {
-            model: InterestModel,
-            where: {
-              tag: interestTag
-            }
-          }
-        ]
-      }
-    ]
+export const findEventsByInterestTag = async (tag: string) => {
+  const query = `
+    SELECT e.id, e.title, e.description, e.date, e.hour, e.location, e.status
+    FROM events e
+    INNER JOIN "eventsInterests" ei ON e.id = ei."eventId"
+    INNER JOIN interests i ON ei."interestId" = i.id
+    WHERE i.tag = :tag
+  `;
+
+  const events = await connectDB.query(query, {
+    replacements: { tag },
+    type: QueryTypes.SELECT,
   });
+
   return events;
+
 };
 
 export const createEvent = async (event: any) => {
@@ -85,6 +86,6 @@ export default {
   findEventsByLocation,
   findAllEvents,
   findEventById,
-  findEventsByInterest,
+  findEventsByInterestTag,
   createEvent
 };

@@ -22,6 +22,7 @@ const EventsInterestModel = connectDB.define("eventsInterests", {
     },
     onDelete: "CASCADE",
   },
+  
 });
 
 

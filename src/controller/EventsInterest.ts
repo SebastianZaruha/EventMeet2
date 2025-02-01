@@ -10,9 +10,9 @@ const getEventsInterest = (req: Request, res: Response) => {
   }
 };
 
-const getEventInterestsByEventId = (req: Request, res: Response) => {
+const getEventInterestsByEventId = async (req: Request, res: Response) => {
   try {
-    const event = findAllByEventId(req.params.id);
+    const event = await findAllByEventId(req.params.id);
     res.status(200).json(event);
         
   } catch (e) {
