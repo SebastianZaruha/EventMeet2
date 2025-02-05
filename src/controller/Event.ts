@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { handleHttp } from "../utils/error.handle";
 
-import  { findEventById, findAllEvents, findEventsByCompanyId, findEventsByDate, findEventsByLocation, findEventsByTitle, createEvent, findEventsByInterestTag} from "../services/Event"; 
+import  { findEventById, findAllEvents, findEventsByCompanyId, findEventsByDate, findEventsByLocation, findEventsByTitle, createEvent, findEventsByInterestTag, findEventsWithFilters} from "../services/Event"; 
 import { create } from "domain";
 
 const getEvent = async(req: Request, res: Response) => {
@@ -65,4 +65,17 @@ const getEventsByInterestTag = async (req: Request, res: Response): Promise<void
   }
 }
 
-export { getEvent, getEvents, updateEvent, postEvent, deleteEvent, getEventsByInterestTag };
+const getFilteredEvents = async (req: Request, res: Response) => {
+  try {
+    const filters = req.body; // Capturamos los filtros desde el body
+
+    const events = await findEventsWithFilters(filters);
+
+    res.json(events);
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+export { getEvent, getEvents, updateEvent, postEvent, deleteEvent, getEventsByInterestTag, getFilteredEvents };

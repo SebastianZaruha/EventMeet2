@@ -42,6 +42,10 @@ const EventModel = conectDB.define(
     location: {
       type: DataTypes.STRING,
     },
+    price: {
+      type: DataTypes.DECIMAL,
+      allowNull: true,
+    },
     status: {
       type: DataTypes.ENUM,
       values: Object.values(StatusEvent),

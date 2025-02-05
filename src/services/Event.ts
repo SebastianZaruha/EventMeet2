@@ -79,6 +79,45 @@ export const createEvent = async (event: any) => {
   return newEvent;
 };
 
+export const findEventsWithFilters = async (filters: any) => {
+  let query = `
+    SELECT e.id, e.title, e.description, e.date, e.hour, e.location, e.status, e.price 
+    FROM events e
+    LEFT JOIN "eventsInterests" ei ON e.id = ei."eventId"
+    LEFT JOIN interests i ON ei."interestId" = i.id
+    WHERE 1=1
+  `;
+
+  const queryParams: any[] = [];
+
+  if (filters.location) {
+    query += ` AND e.location ILIKE ?`;
+    queryParams.push(`%${filters.location}%`);
+  }
+
+  if (filters.date) {
+    query += ` AND e.date = ?`;
+    queryParams.push(filters.date);
+  }
+
+  if (filters.interests) {
+    query += ` AND i.tag = ?`;
+    queryParams.push(filters.interests);
+  }
+
+  if (filters.maxPrice) {
+    query += ` AND e.price <= ?`;
+    queryParams.push(filters.maxPrice);
+  }
+
+  query += ` ORDER BY e.date ASC;`;
+
+  return await connectDB.query(query, {
+    type: QueryTypes.SELECT,
+    replacements: queryParams, // Pasamos los valores de manera segura
+  });
+};
+
 export default {
   findEventsByCompanyId,
   findEventsByTitle,
@@ -87,5 +126,6 @@ export default {
   findAllEvents,
   findEventById,
   findEventsByInterestTag,
-  createEvent
+  createEvent,
+  findEventsWithFilters
 };
