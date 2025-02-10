@@ -2,7 +2,7 @@ import EventModel from "../models/Event";
 import InterestModel from "../models/Interest";
 import EventInterestModel from "../models/EventsInterest";
 import connectDB from "../config/db-connector";
-import { QueryTypes } from "sequelize";
+import { Op, QueryTypes } from "sequelize";
 //He añadido el service de los eventos como propuesta de las posibilidades que deberían tener nuestros usuarios para buscar eventos
 export const findEventsByCompanyId = async (companyid: string) => {
   const events = await EventModel.findAll({
@@ -40,9 +40,17 @@ export const findEventsByLocation = async (location: string) => {
 };
 
 export const findAllEvents = async () => {
-    const events = await EventModel.findAll();
-    return events;
-  };
+  const currentDate = new Date();
+  const events = await EventModel.findAll({
+    where: {
+      date: {
+        [Op.gte]: currentDate,
+      },
+    },
+    order: [['date', 'ASC']],
+  });
+  return events;
+};
 
 export const findEventById = async (id: string) => {
   //este último puede que lo utilicemos para extraer todos los datos de un evento si lo querems
