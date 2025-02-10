@@ -1,6 +1,7 @@
 import e, { Request, Response } from "express";
 import { handleHttp } from "../utils/error.handle";
 import { findAllUsers, findByEmail, findById, findByIdAndUpdate, passwordMatch, saveUser } from "../services/User";
+import jwt from "jsonwebtoken"//haced npm install para que os funcione el login, no está implementado porque no sé cómo hacerlo en TypeScript
 
 const getUser = async (req: Request, res: Response) => {
   try {
@@ -71,9 +72,14 @@ const loginUser = async (req: Request, res: Response) => {
     } else {
       const isMatch = await passwordMatch(email, password);
       if (isMatch) {
-        res.status(200).json(user);
+        // Token Generado
+        const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET || 'clave_privada_de_repuesto', {//esto da error, pero no sé bien por qué.
+          expiresIn: '1h' //Expiración
+        });
+
+        res.status(200).json({ user, token });//devolución del token
       } else {
-        res.status(401).json({ message: "Invalid password" });
+        res.status(400).json({ message: "Invalid data" });
       }
     }   
   } catch (e) {
