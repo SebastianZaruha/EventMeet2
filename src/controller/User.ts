@@ -66,7 +66,7 @@ const deleteUser = (req: Request, res: Response) => {
 const loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const user = await findByEmail(email);
+    const user: any = await findByEmail(email);
     if (!user) {
       res.status(404).json({ message: "User not found" });
     } else {
