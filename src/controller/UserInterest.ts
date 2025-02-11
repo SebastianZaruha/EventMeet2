@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { handleHttp } from "../utils/error.handle";
+import { createUserInterest, findAllInterestsByUserId } from "../services/UserInterest";
 
 const getUserInterest = (req: Request, res: Response) => {
   try {
@@ -8,8 +9,11 @@ const getUserInterest = (req: Request, res: Response) => {
   }
 };
 
-const getUserInterests = (req: Request, res: Response) => {
+const getInterstsByUserId = async (req: Request, res: Response) => {
   try {
+    const interests = await findAllInterestsByUserId(req.params.id);
+    res.status(200).send(interests);
+
   } catch (e) {
     handleHttp(res, "ERROR_GET_USERINTERESTS");
   }
@@ -22,9 +26,13 @@ const updateUserInterest = (req: Request, res: Response) => {
   }
 };
 
-const postUserInterest = ({ body }: Request, res: Response) => {
+const postCreateUserInterest = async (req: Request, res: Response) => {
   try {
-    res.send(body);
+    const { userId } = req.body;
+    const { interestId } = req.body;
+    const userInterest = await createUserInterest(userId, interestId);
+    res.status(201).send(userInterest);
+        
   } catch (e) {
     handleHttp(res, "ERROR_POST_USERINTEREST");
   }
@@ -39,8 +47,8 @@ const deleteUserInterest = (req: Request, res: Response) => {
 
 export {
   getUserInterest,
-  getUserInterests,
+  getInterstsByUserId,
   updateUserInterest,
-  postUserInterest,
+  postCreateUserInterest,
   deleteUserInterest,
 };

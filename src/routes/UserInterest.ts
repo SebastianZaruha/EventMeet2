@@ -1,18 +1,18 @@
 import { Request, Response, Router } from "express";
 import {
   getUserInterest,
-  getUserInterests,
+  getInterstsByUserId,
   updateUserInterest,
-  postUserInterest,
+  postCreateUserInterest,
   deleteUserInterest,
 } from "../controller/UserInterest";
 
 const router = Router();
 
 router.get("/:id", getUserInterest);
-router.get("/", getUserInterests);
+router.get("/", getInterstsByUserId);
 router.put("/:id", updateUserInterest);
-router.post("/", postUserInterest);
+router.post("/", postCreateUserInterest);
 router.delete("/:id", deleteUserInterest);
 
-export { router };
+export { router as userInterestRouter };
