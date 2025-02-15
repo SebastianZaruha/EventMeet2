@@ -1,7 +1,11 @@
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
+import {
+  findAllUsers,
+  findById,
+  findByIdAndUpdate,
+  saveUser
+} from "../services/User";
 import { handleHttp } from "../utils/error.handle";
-import { findAllUsers, findByEmail, findById, findByIdAndUpdate, passwordMatch, saveUser } from "../services/User";
-import jwt from "jsonwebtoken"//haced npm install para que os funcione el login, no está implementado porque no sé cómo hacerlo en TypeScript
 
 const getUser = async (req: Request, res: Response) => {
   try {
@@ -41,7 +45,6 @@ const updateUser = (req: Request, res: Response) => {
   } catch (e) {
     handleHttp(res, "ERROR_UPDATE_USER");
   }
-
 };
 
 const postUser = (req: Request, res: Response) => {
@@ -63,28 +66,5 @@ const deleteUser = (req: Request, res: Response) => {
   }
 };
 
-const loginUser = async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
-    const user: any = await findByEmail(email);
-    if (!user) {
-      res.status(404).json({ message: "User not found" });
-    } else {
-      const isMatch = await passwordMatch(email, password);
-      if (isMatch) {
-        // Token Generado
-        const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET || 'clave_privada_de_repuesto', {//esto da error, pero no sé bien por qué.
-          expiresIn: '1h' //Expiración
-        });
+export { deleteUser, getUser, getUsers, postUser, updateUser };
 
-        res.status(200).json({ user, token });//devolución del token
-      } else {
-        res.status(400).json({ message: "Invalid data" });
-      }
-    }   
-  } catch (e) {
-    handleHttp(res, "ERROR_LOGIN_USER");
-  }
-}
-
-export { getUser, getUsers, updateUser, postUser, deleteUser, loginUser };
