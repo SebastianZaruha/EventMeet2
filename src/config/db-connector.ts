@@ -6,7 +6,7 @@ dotenv.config();
 const connectDB = new Sequelize(
   process.env.DB_NAME || "dbEventMeet",
   process.env.DB_USER || "postgres",
-  process.env.DB_PASSWORD || "postgres",
+  process.env.DB_PASSWORD || "1234",
   {
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
