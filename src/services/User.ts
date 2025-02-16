@@ -1,26 +1,26 @@
 import User from "../models/User";
 import UserModel from "../models/User";
-import bcrypt from "bcrypt"; // Importa bcrypt para hashear contraseñas
+import bcrypt from "bcrypt";
 
 export const findAllUsers = async () => {
   const users = await UserModel.findAll();
   return users;
 };
 export const saveUser = async (user: any) => {
-  console.log("Datos recibidos en saveUser:", user); // <-- Imprime los datos recibidos
+  console.log("Datos recibidos en saveUser:", user); 
   try {
     const hashedPassword = await bcrypt.hash(user.password, 10);
     user.password = hashedPassword;
     const newUser = await User.create(user);
-    console.log("Usuario creado en saveUser:", newUser); // <-- Imprime el usuario creado
+    console.log("Usuario creado en saveUser:", newUser); 
     return newUser;
   } catch (error) {
-    console.error("Error saving user en saveUser:", error); // <-- Imprime el error
+    console.error("Error saving user en saveUser:", error); 
     throw error;
   }
 };
 export const findById = async (id: string) => {
-  //los id son strings porque las http request son en string
+
   const user = await UserModel.findOne({
     where: {
       id,
@@ -61,7 +61,8 @@ export const passwordMatch = async (
     return false;
   }
 };
-
+      //  Método para comparar contraseña sin encriptar
+      
 // export const passwordMatch = async (
 //   email: string,
 //   passwordToCheck: string

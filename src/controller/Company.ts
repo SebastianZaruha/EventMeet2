@@ -8,21 +8,20 @@ import {
   saveCompany,
 } from "../services/Company";
 
-const getCompanyById = (req: Request, res: Response) => {
+import CompanyModel, { Company } from "../models/Company"; // Importa CompanyModel y la interfaz Company
+
+const getCompanyById = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
-    findById(id).then((company) => {
-      if (company) {
-        res.status(200).json(company);
-      } else {
-        res.status(404).json({ message: "Company not found" });
-      }
-    });
+    const company: Company | null = await findById(req.params.id); // Usa la interfaz Company para tipar
+    if (company) {
+      res.status(200).json({ success: true, data: company });
+    } else {
+      res.status(404).json({ success: false, message: "Company not found" });
+    }
   } catch (e) {
-    handleHttp(res, "ERROR_GET_COMPANY");
+    handleHttp(res, "ERROR_GET_COMPANY", e);
   }
 };
-
 const getCompanies = (req: Request, res: Response) => {
   try {
     findAllCompanies().then((companies) => {

@@ -18,3 +18,9 @@ interface TokenPayload extends JwtPayload {
   points: number;
   status: string;
 }
+
+export interface CompanyTokenPayload {
+  companyId: number;
+  email: string;
+  name_company: string;
+}

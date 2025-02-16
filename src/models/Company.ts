@@ -1,7 +1,20 @@
 import { DataTypes } from "sequelize";
 import conectDB from "../config/db-connector";
 
-const CompanyModel = conectDB.define("companies", {
+import { Model } from "sequelize";
+
+export interface Company extends Model {
+  id: number;
+  name_company: string;
+  email: string;
+  password: string;
+  location: string;
+  createdAt?: Date;
+  deletedAt?: Date;
+  updatedAt?: Date;
+}
+
+const CompanyModel = conectDB.define<Company>("companies", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -14,6 +27,11 @@ const CompanyModel = conectDB.define("companies", {
   email: {
     type: DataTypes.STRING,
     unique: true,
+    allowNull: false,
+  },
+  password: {
+    // Añade el campo password
+    type: DataTypes.STRING,
     allowNull: false,
   },
   location: {

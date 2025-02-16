@@ -10,7 +10,11 @@ import { interestRouter } from "./routes/Interest";
 import { userRouter } from "./routes/User";
 import { userInterestRouter } from "./routes/UserInterest";
 import { findByEmail, passwordMatch, saveUser } from "./services/User";
-import { TokenPayload } from "./types/express";
+import { CompanyTokenPayload, TokenPayload } from "./types/express";
+import Company, {
+  passwordMatches,
+  findCompanyByEmail,
+} from "./services/Company";
 
 console.log("Iniciando la aplicación...");
 
@@ -32,18 +36,18 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
   const token = req.header("Authorization")?.split(" ")[1];
 
   if (!token) {
-    console.log("No se proporcionó token"); // <-- Console.log
+    console.log("No se proporcionó token");
     return res.status(401).json({ message: "No se proporcionó token" });
   }
   console.log("Token recibido:", token);
   jwt.verify(token, secretKey, (err, decoded: any) => {
     // Tipo 'any' para decoded, o define una interfaz para tu payload
     if (err) {
-      console.error("Error al verificar el token:", err); // <-- Console.error
+      console.error("Error al verificar el token:", err);
       return res.status(403).json({ message: "Token inválido" });
     }
 
-    console.log("Token verificado:", decoded); // <-- Console.log
+    console.log("Token verificado:", decoded);
     req.user = decoded; // Ahora req.user tiene un tipo (any por ahora)
     next();
   });
@@ -73,7 +77,6 @@ app.post(
     try {
       console.log("Buscando usuario:", email);
 
-      // 1. Obtener el usuario de la base de datos (tipado correcto)
       const user: any = await findByEmail(email); // Tipado 'any' hasta que definas el tipo de usuario
 
       if (!user) {
@@ -86,16 +89,12 @@ app.post(
 
       const isMatch = await passwordMatch(email, password.trim());
 
-      console.log("Contraseña proporcionada:", password); // <-- Imprime la contraseña proporcionada
-      console.log("Contraseña almacenada:", user.password); // <-- Imprime la contraseña almacenada (si no está encriptada, ¡cuidado!)
-      console.log("Resultado de la comparación:", isMatch); // <-- Imprime el resultado de la comparación
-
-      console.log("Contraseña proporcionada:", password, typeof password); // Imprime la contraseña y su tipo
+      console.log("Contraseña proporcionada:", password, typeof password);
       console.log(
         "Contraseña almacenada:",
         user.password,
         typeof user.password
-      ); // Imprime la contraseña y su tipo
+      );
       console.log("Resultado de la comparación:", isMatch);
 
       if (!isMatch) {
@@ -108,8 +107,8 @@ app.post(
 
       // 2. Crear el Payload (usando la interfaz TokenPayload)
       const payload: TokenPayload = {
-        userId: user.id, // Asegúrate de que user.id exista y sea un número
-        email: user.email, // Asegúrate de que user.email exista
+        userId: user.id,
+        email: user.email,
         role: user.role,
         nick: user.nick,
         location: user.location,
@@ -131,6 +130,97 @@ app.post(
     }
   }
 );
+app.post(
+  "/v1/companies/login",
+  validateLogin,
+  async (req: Request, res: Response): Promise<void> => {
+    const { email, password } = req.body;
+
+    try {
+      const company = await findCompanyByEmail(email);
+
+      if (!company) {
+        res.status(401).json({ message: "Invalid credentials" });
+        return;
+      }
+
+      if (company.password === password) {
+        // Direct comparison (INSECURE - Do not use in production)
+        const token = jwt.sign({ companyId: company.id }, secretKey, {
+          expiresIn: "1h",
+        });
+        res.json({ token });
+      } else {
+        res.status(401).json({ message: "Invalid credentials" });
+        return;
+      }
+    } catch (error) {
+      console.error("Error during company login:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+);
+
+// app.post(
+//   "/v1/companies/login",
+//   validateLogin,
+//   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+//     console.log("Ruta /v1/companies/login iniciada");
+
+//     const errors = validationResult(req);
+//     if (!errors.isEmpty()) {
+//       console.log("Errores de validación:", errors.array());
+//       res.status(400).json({ errors: errors.array() });
+//       return;
+//     }
+
+//     const { email, password } = req.body;
+
+//     try {
+//       console.log("Buscando compañía:", email);
+
+//       const company: any = await findCompanyByEmail(email);
+
+//       if (!company) {
+//         console.log("Compañía no encontrada");
+//         res.status(404).json({ message: "Company not found" });
+//         return;
+//       }
+
+//       console.log("Compañía encontrada:", company);
+
+//       const isMatch = await passwordMatches(email, password.trim());
+
+//       console.log("Contraseña proporcionada:", password, typeof password);
+//       console.log(
+//         "Contraseña almacenada:",
+//         company.password,
+//         typeof company.password
+//       );
+//       console.log("Resultado de la comparación:", isMatch);
+
+//       if (!isMatch) {
+//         console.log("Contraseña incorrecta");
+//         res.status(400).json({ message: "Invalid credentials" });
+//         return;
+//       }
+
+//       console.log("Contraseña correcta");
+
+//       const companyPayload: CompanyTokenPayload = {
+//         companyId: company.id,
+//         email: company.email,
+//         name_company: company.name_company,
+//       };
+
+//       const token = jwt.sign(companyPayload, secretKey, { expiresIn: "1h" });
+//       res.json({ token });
+//     } catch (error) {
+//       console.error("Error during company login:", error);
+//       next(error);
+//     }
+//   }
+// );
 
 app.post("/v1/users", async (req: Request, res: Response) => {
   console.log("Datos recibidos:", req.body);
@@ -139,8 +229,9 @@ app.post("/v1/users", async (req: Request, res: Response) => {
     console.log("Usuario creado:", newUser);
     res.status(201).json(newUser);
   } catch (error) {
-    console.error("Error creating user:", error); // <-- Imprime el error completo en la consola del backend
-    const errorMessage = (error instanceof Error) ? error.message : "Unknown error";
+    console.error("Error creating user:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     res.status(500).json({ message: errorMessage }); // <-- Envía el mensaje de error ESPECÍFICO al frontend
   }
 });
@@ -150,8 +241,35 @@ app.use("/v1/interests", interestRouter);
 app.use("/v1/events-interests", eventsInterestRouter);
 app.use("/v1/user-interests", userInterestRouter);
 
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   authenticate(req, res, next);
+// });
+
 app.use((req: Request, res: Response, next: NextFunction) => {
-  authenticate(req, res, next); // Llama a tu función authenticate
+  const token = req.header("Authorization")?.split(" ")[1];
+
+  if (!token) {
+    res.status(401).json({ message: "No se proporcionó token" }); // Send the response
+    return; // Stop further execution
+  }
+
+  jwt.verify(token, secretKey, (err, decoded: any) => {
+    if (err) {
+      res.status(403).json({ message: "Token inválido" }); // Send the response
+      return; // Stop further execution
+    }
+
+    req.user = decoded; // req.user ahora tiene la información del payload
+
+    if (req.user?.isCompany) {
+      // Nueva condición
+      console.log("Es una compañia");
+      next(); // Permite el acceso a las rutas de compañía
+    } else {
+      console.log("No es una compañia");
+      next(); // Permite el acceso a las rutas de usuario
+    }
+  });
 });
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
